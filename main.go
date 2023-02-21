@@ -12,7 +12,9 @@ import (
 	"github.com/charmbracelet/glamour"
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
+	"github.com/shufo/backlog-cli/api"
 	"github.com/shufo/backlog-cli/auth"
+	"github.com/shufo/backlog-cli/client"
 	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/util"
 	"github.com/urfave/cli/v2"
@@ -54,24 +56,59 @@ func main() {
 		Name:  "bl",
 		Usage: "Open a URL in the default web browser with an embedded parameter",
 		Flags: []cli.Flag{
-			&cli.IntFlag{
-				Name:    "param",
-				Aliases: []string{"p"},
-				Usage:   "The parameter to embed in the URL",
+			&cli.StringFlag{
+				Name:    "config",
+				Aliases: []string{"c"},
+				Usage:   "The config file path",
+				Value:   "backlog.json",
 			},
 		},
 		Commands: []*cli.Command{
 			{
-				Name:  "view",
-				Usage: "view ticket",
+				Name:  "issue",
+				Usage: "Work with backlog issues",
+				Subcommands: []*cli.Command{
+					{
+						Name:      "view",
+						Usage:     "view issue",
+						UsageText: "bl issue view <issue_num>",
+						ArgsUsage: "<issue_num>",
+						Action: func(ctx *cli.Context) error {
+							conf, err := config.GetBacklogSetting()
+
+							if err != nil {
+								config.ShowConfigNotFound()
+								os.Exit(1)
+							}
+
+							if ctx.Args().Len() == 0 {
+								cli.ShowSubcommandHelpAndExit(ctx, 1)
+							}
+
+							id := ctx.Args().First()
+							token, err := config.GetAccessToken(conf)
+
+							if err != nil {
+								config.ShowConfigNotFound()
+							}
+
+							bl := client.New(conf, token)
+							api.GetIssue(bl, conf, id)
+
+							return nil
+						},
+					},
+				},
 			},
 			{
 				Name:  "auth",
 				Usage: "authentication",
 				Subcommands: []*cli.Command{
 					{
-						Name:  "login",
-						Usage: "Login to backlog space",
+						Name:      "login",
+						Usage:     "Login to backlog organization.\nYou can find organization name at your backlog url https://<organization>.backlog.com/",
+						UsageText: "bl auth login <organization>",
+						ArgsUsage: "<organization>",
 						Action: func(ctx *cli.Context) error {
 							auth.Login(ctx)
 

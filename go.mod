@@ -4,11 +4,16 @@ go 1.18
 
 require (
 	github.com/briandowns/spinner v1.21.0
+	github.com/manifoldco/promptui v0.9.0
 	github.com/urfave/cli/v2 v2.24.4
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require golang.org/x/term v0.5.0 // indirect
+require (
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
+	github.com/shufo/find-config v0.1.1 // indirect
+	golang.org/x/term v0.5.0 // indirect
+)
 
 require (
 	github.com/alecthomas/chroma v0.10.0 // indirect

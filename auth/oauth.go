@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
-	"github.com/briandowns/spinner"
+	"github.com/shufo/backlog-cli/config"
 )
 
 type OauthAuthorizationCodeResponse struct {
@@ -17,13 +18,22 @@ type OauthAuthorizationCodeResponse struct {
 
 var baseUrl = "https://worker-test.shufo.workers.dev"
 
-func GetOauthAuthorizationCode(space string, authCode string) string {
+type ErrorOrganizationNotFound struct {
+	s string
+}
+
+func (e *ErrorOrganizationNotFound) Error() string {
+	return e.s
+}
+
+func GetOauthAuthorizationUrl(setting config.BacklogSettings, authCode string) (string, error) {
 	// Make an HTTP GET request to the API endpoint
-	url := fmt.Sprintf("%s/api/v1/oauth?space=%s&auth_code=%s", baseUrl, space, authCode)
+	url := fmt.Sprintf("%s/api/v1/oauth?domain=%s&space=%s&auth_code=%s", baseUrl, setting.BacklogDomain, setting.Organization, authCode)
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}
+
 	defer resp.Body.Close()
 
 	// Decode the response body into a Response struct
@@ -33,9 +43,16 @@ func GetOauthAuthorizationCode(space string, authCode string) string {
 		panic(err)
 	}
 
+	if response.Location == "https://backlog.com/" {
+		return "", &ErrorOrganizationNotFound{"organization not found"}
+	}
+
+	if strings.HasPrefix(response.Location, "https://backlog.com/") {
+		return "", &ErrorOrganizationNotFound{"organization not found"}
+	}
+
 	// return location value
-	fmt.Println(response.Location)
-	return fmt.Sprintf("https://%s.backlog.com%s", space, response.Location)
+	return fmt.Sprintf("https://%s.%s%s", setting.Organization, setting.BacklogDomain, response.Location), nil
 }
 
 type AuthorizationApprovedResponse struct {
@@ -49,12 +66,6 @@ func WaitForAuthorizationApprove(space string, authCode string) (string, error) 
 	}
 
 	startTime := time.Now()
-
-	// Create a new spinner with the default configuration
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-
-	// Start the spinner
-	s.Start()
 
 	var resp *http.Response
 	var data AuthorizationApprovedResponse
@@ -73,7 +84,6 @@ func WaitForAuthorizationApprove(space string, authCode string) (string, error) 
 		// Check the response status code
 		if resp.StatusCode == http.StatusOK {
 			// If the response code is 200, print a success message and exit the loop
-			fmt.Println("Authorization Success!")
 
 			err = json.NewDecoder(resp.Body).Decode(&data)
 			if err != nil {
@@ -94,8 +104,6 @@ func WaitForAuthorizationApprove(space string, authCode string) (string, error) 
 		}
 	}
 
-	defer s.Stop()
-
 	if resp.StatusCode == 200 {
 		return data.AuthorizationCode, nil
 	}
@@ -110,18 +118,19 @@ type RequestAccessTokenResponse struct {
 	ExpiresIn    uint64 `json:"expires_in"`
 }
 
-func GetAccessTokenFromAuthorizationCode(space string, authorizationCode string) RequestAccessTokenResponse {
+func GetAccessTokenFromAuthorizationCode(space string, domain string, authorizationCode string) (RequestAccessTokenResponse, error) {
 	var endpoint = fmt.Sprintf("%s/api/v1/token", baseUrl)
 
 	// Set up the POST request parameters for the API
 	data := url.Values{}
 	data.Set("code", authorizationCode)
 	data.Set("space", space)
+	data.Set("domain", domain)
 
 	// Make the POST request to the OAuth token generation API
 	resp, err := http.PostForm(endpoint, data)
 	if err != nil {
-		panic(err)
+		return RequestAccessTokenResponse{}, fmt.Errorf("generate oauth token error")
 	}
 	defer resp.Body.Close()
 
@@ -130,8 +139,36 @@ func GetAccessTokenFromAuthorizationCode(space string, authorizationCode string)
 	err = json.NewDecoder(resp.Body).Decode(&res)
 
 	if err != nil {
-		panic(err)
+		return RequestAccessTokenResponse{}, fmt.Errorf("error decode request access token response")
 	}
 
-	return res
+	return res, nil
+}
+
+func GetAccessTokenFromRefreshToken(setting config.BacklogSettings, refreshToken string) (RequestAccessTokenResponse, error) {
+	var endpoint = fmt.Sprintf("%s/api/v1/refresh_token", baseUrl)
+
+	// Set up the POST request parameters for the API
+	data := url.Values{}
+	data.Set("space", setting.Organization)
+	data.Set("domain", setting.BacklogDomain)
+	data.Set("refresh_token", refreshToken)
+
+	// Make the POST request to the OAuth token generation API
+	resp, err := http.PostForm(endpoint, data)
+
+	if err != nil {
+		return RequestAccessTokenResponse{}, fmt.Errorf("generate token error")
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	var res RequestAccessTokenResponse
+	err = json.NewDecoder(resp.Body).Decode(&res)
+
+	if err != nil {
+		return RequestAccessTokenResponse{}, fmt.Errorf("error decode request access token response")
+	}
+
+	return res, nil
 }

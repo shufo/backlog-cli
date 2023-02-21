@@ -1,18 +1,24 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/fatih/color"
+	config "github.com/shufo/find-config"
 	"gopkg.in/yaml.v3"
 )
 
+var defaultConfigName = "backlog.json"
+
 type BacklogSettings struct {
-	Project      string `json:"project"`
-	Organization string `json:"organization"`
+	BacklogDomain string `json:"backlog_domain"`
+	Organization  string `json:"organization"`
+	Project       string `json:"project"`
 }
 
 type Config map[string]HostConfig
@@ -21,6 +27,35 @@ type HostConfig struct {
 	Hostname     string `yaml:"hostname"`
 	AccessToken  string `yaml:"access_token"`
 	RefreshToken string `yaml:"refresh_token"`
+}
+
+func ConfigExists() bool {
+	file, err := os.Open(defaultConfigName)
+
+	if err != nil {
+		return false
+	}
+
+	defer file.Close()
+
+	return true
+}
+
+func GetBacklogSetting() (BacklogSettings, error) {
+	configBytes, err := ioutil.ReadFile(defaultConfigName)
+
+	if err != nil {
+		return BacklogSettings{}, err
+	}
+
+	var settings BacklogSettings
+	err = json.Unmarshal(configBytes, &settings)
+
+	if err != nil {
+		log.Fatalf("parse error: %s at %s\n", err, defaultConfigName)
+	}
+
+	return settings, nil
 }
 
 func ReadConfig() (Config, error) {
@@ -55,7 +90,7 @@ func WriteConfig(space string, update *HostConfig) {
 		log.Fatalf("parse error: %s at %s\n", err, configPath)
 	}
 
-	host := fmt.Sprintf("%s.backlog.com", space)
+	host := update.Hostname
 
 	_, ok := hostConfig[host]
 
@@ -94,7 +129,7 @@ func WriteConfig(space string, update *HostConfig) {
 	}
 }
 
-func GetAccessToken(space string) (string, error) {
+func GetAccessToken(setting BacklogSettings) (string, error) {
 	configPath := configPath()
 	configBytes, err := ioutil.ReadFile(configPath)
 
@@ -109,7 +144,7 @@ func GetAccessToken(space string) (string, error) {
 		log.Fatalf("parse error: %s at %s\n", err, configPath)
 	}
 
-	host := fmt.Sprintf("%s.backlog.com", space)
+	host := fmt.Sprintf("%s.%s", setting.Organization, setting.BacklogDomain)
 
 	_, ok := hostConfig[host]
 
@@ -120,11 +155,67 @@ func GetAccessToken(space string) (string, error) {
 	}
 }
 
-func configPath() string {
-	homeDir, err := os.UserHomeDir()
+func GetRefreshToken(setting BacklogSettings) (string, error) {
+	configPath := configPath()
+	configBytes, err := ioutil.ReadFile(configPath)
+
 	if err != nil {
 		panic(err)
 	}
 
-	return filepath.Join(homeDir, ".config", "bl", "hosts.yml")
+	var hostConfig Config
+	err = yaml.Unmarshal(configBytes, &hostConfig)
+
+	if err != nil {
+		log.Fatalf("parse error: %s at %s\n", err, configPath)
+	}
+
+	host := fmt.Sprintf("%s.%s", setting.Organization, setting.BacklogDomain)
+
+	_, ok := hostConfig[host]
+
+	if ok && hostConfig[host].RefreshToken != "" {
+		return hostConfig[host].RefreshToken, nil
+	} else {
+		return "", fmt.Errorf("refresh token not found")
+	}
+}
+
+func CreateDefaultConfig(p *BacklogSettings) {
+	// Convert the Person struct to JSON
+	jsonBytes, err := json.MarshalIndent(p, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.Create(defaultConfigName)
+
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	// Write the JSON to the file
+	_, err = file.Write(jsonBytes)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func configPath() string {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		panic(err)
+	}
+
+	return filepath.Join(configDir, "bl", "hosts.yml")
+}
+
+func FindConfig(name string) (string, error) {
+	return config.Find(name, ".")
+}
+
+func ShowConfigNotFound() {
+	color.Red("backlog.json not found")
 }
