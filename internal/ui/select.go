@@ -12,8 +12,9 @@ import (
 var choices []string
 
 type model struct {
-	cursor int
-	choice string
+	cursor   int
+	choice   string
+	canceled bool
 }
 
 func Select(title string, chs []string) string {
@@ -29,8 +30,16 @@ func Select(title string, chs []string) string {
 	}
 
 	// Assert the final tea.Model to our local model and print the choice.
-	if m, ok := m.(model); ok && m.choice != "" {
-		return m.choice
+	if m, ok := m.(model); ok {
+		if m.canceled {
+			fmt.Println("Canceled")
+			os.Exit(1)
+		}
+
+		if m.choice != "" {
+			return m.choice
+
+		}
 	}
 
 	return ""
@@ -45,8 +54,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c":
-			fmt.Println("Canceled")
-			os.Exit(1)
+			m.canceled = true
+			return m, tea.Quit
 
 		case "enter":
 			// Send the choice on the channel and exit.

@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
+	"github.com/manifoldco/promptui"
 	"github.com/shufo/backlog-cli/client"
 	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/internal/ui"
@@ -18,6 +20,7 @@ import (
 type model struct {
 	options  []string
 	selected map[int]bool
+	canceled bool
 	cursor   int
 }
 
@@ -48,12 +51,14 @@ func Edit(ctx *cli.Context) error {
 		"Summary",
 		"Description",
 		"Assignee",
+		"Status",
 	}
 
 	licence, err := bl.GetLicence()
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	if *licence.Gantt {
@@ -62,19 +67,32 @@ func Edit(ctx *cli.Context) error {
 
 	options = append(options, "Due Date")
 
-	m := model{
+	p := tea.NewProgram(model{
 		options:  options,
 		selected: make(map[int]bool),
-	}
+	})
 
-	p := tea.NewProgram(m)
+	m, err := p.Run()
 
-	if err := p.Start(); err != nil {
-		fmt.Println("Error running program:", err)
+	if err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	options = m.getSelectedOptions()
+	var selected []string
+	if m, ok := m.(model); ok {
+		if m.canceled {
+			fmt.Println("Canceled")
+			os.Exit(1)
+		}
+
+		if len(m.selected) == 0 {
+			fmt.Println("Canceled")
+			os.Exit(1)
+		}
+
+		selected = m.getSelectedOptions()
+	}
 
 	var params *backlog.UpdateIssueInput = &backlog.UpdateIssueInput{}
 
@@ -85,42 +103,152 @@ func Edit(ctx *cli.Context) error {
 		log.Fatalln(err)
 	}
 
-	if util.ContainsString(options, "Issue Type") {
-		issueTypeId := getIssueTypeInput(bl, conf)
+	var changed bool
+
+	if util.ContainsString(selected, "Issue Type") {
+		issueTypeId := getIssueTypeInput(&getIssueTypeInputParam{bl: bl, conf: conf, current: *issue.IssueType.Name})
 		params.IssueTypeID = issueTypeId
-	}
 
-	if util.ContainsString(options, "Summary") {
-		summary := getSummaryInput(&getSummaryInputParam{currentValue: *issue.Summary})
-		params.Summary = &summary
-	}
-
-	if util.ContainsString(options, "Description") {
-		description := getDescriptionInput(&getDescriptionInputParam{currentValue: *issue.Description})
-		params.Description = &description
-	}
-
-	if util.ContainsString(options, "Assignee") {
-		assigneeId := getAssigneeInput(bl, conf)
-		if assigneeId > 0 {
-			params.AssigneeID = assigneeId
+		if *issue.IssueType.ID != *issueTypeId {
+			changed = true
 		}
 	}
 
-	if util.ContainsString(options, "Start Date") {
-		startDate := getStartDateInput()
-		params.StartDate = &startDate
+	if util.ContainsString(selected, "Summary") {
+		summary := getSummaryInput(&getSummaryInputParam{current: *issue.Summary})
+		params.Summary = &summary
+
+		if *issue.Summary != summary {
+			changed = true
+		}
 	}
 
-	if util.ContainsString(options, "Due Date") {
-		dueDate := getDueDateInput()
-		params.DueDate = &dueDate
+	if util.ContainsString(selected, "Description") {
+		description := getDescriptionInput(&getDescriptionInputParam{current: *issue.Description})
+		params.Description = &description
+
+		if *issue.Description != description {
+			changed = true
+		}
+	}
+
+	if util.ContainsString(selected, "Assignee") {
+		var assigneeId int
+
+		if issue.Assignee != nil {
+			assigneeId = getAssigneeInput(&getAssigneeInputParam{bl: bl, conf: conf, current: *issue.Assignee.Name})
+		} else {
+			assigneeId = getAssigneeInput(&getAssigneeInputParam{bl: bl, conf: conf})
+		}
+
+		if assigneeId > 0 {
+			params.AssigneeID = assigneeId
+		}
+
+		// if the assignee is changed
+		if issue.Assignee != nil {
+			// if the enter key pressed (skipped)
+			if assigneeId == -1 {
+				changed = false
+			} else if *issue.Assignee.ID != assigneeId {
+				// assignee changed
+				changed = true
+			}
+		} else {
+			if assigneeId > 0 {
+				changed = true
+			}
+		}
+
+	}
+
+	if util.ContainsString(selected, "Status") {
+		statusId := getStatusInput(&getStatusInputParam{bl: bl, conf: conf, current: *issue.Status.Name})
+		params.StatusID = &statusId
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		if *issue.Status.ID != statusId {
+			changed = true
+		}
+
+	}
+
+	if util.ContainsString(selected, "Start Date") {
+		var startDate string
+
+		if issue.StartDate != nil {
+			startDate = getStartDateInput(&getStartDateInputParam{current: *issue.StartDate})
+		} else {
+			startDate = getStartDateInput(&getStartDateInputParam{})
+		}
+
+		if startDate != "" {
+			params.DueDate = &startDate
+		}
+
+		// if the start date is changed
+		if issue.StartDate != nil {
+			parsed, err := time.Parse("2006-01-02T00:00:00Z", *issue.StartDate)
+
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			if parsed.Format("2006-01-02") != startDate {
+				changed = true
+			}
+
+		} else {
+			if startDate != "" {
+				changed = true
+			}
+		}
+	}
+
+	if util.ContainsString(selected, "Due Date") {
+		var dueDate string
+
+		if issue.DueDate != nil {
+			dueDate = getDueDateInput(&getDueDateInputParam{current: *issue.DueDate})
+		} else {
+			dueDate = getDueDateInput(&getDueDateInputParam{})
+		}
+
+		if dueDate != "" {
+			params.DueDate = &dueDate
+		}
+
+		// if the due date is changed
+		if issue.DueDate != nil {
+			parsed, err := time.Parse("2006-01-02T00:00:00Z", *issue.DueDate)
+
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			if parsed.Format("2006-01-02") != dueDate {
+				changed = true
+			}
+
+		} else {
+			if dueDate != "" {
+				changed = true
+			}
+		}
 	}
 
 	submit := ui.Select("What's next?", []string{"Submit", "Cancel"})
 
 	if submit == "Cancel" {
 		fmt.Println("Discarded.")
+		os.Exit(1)
+	}
+
+	if !changed {
+		fmt.Println("issue has nothing changed.")
 		os.Exit(1)
 	}
 
@@ -168,8 +296,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			return m, tea.Quit
 		case "ctrl+c":
-			fmt.Println("Canceled")
-			os.Exit(1)
+			m.canceled = true
+			return m, tea.Quit
 		}
 
 	case optionMsg:
@@ -228,4 +356,69 @@ func (m model) getSelectedOptions() []string {
 		}
 	}
 	return selected
+}
+
+type getStatusInputParam struct {
+	bl      *backlog.Client
+	conf    config.BacklogSettings
+	current string
+}
+
+func getStatusInput(param *getStatusInputParam) int {
+	// get issue types
+	statuses, err := param.bl.GetStatuses(param.conf.Project)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var items []string
+
+	for _, v := range statuses {
+		items = append(items, *v.Name)
+	}
+
+	var cursorPos int
+
+	if param.current != "" {
+
+		for i, v := range statuses {
+			if *v.Name == param.current {
+				cursorPos = i
+			}
+		}
+	}
+
+	var label string
+
+	if param.current != "" {
+		label = fmt.Sprintf("Select status (%s)", param.current)
+	} else {
+		label = "Select status"
+	}
+
+	promptStatus := promptui.Select{
+		Label: label,
+		Items: items,
+		Size:  10,
+	}
+
+	_, selected, err := promptStatus.RunCursorAt(cursorPos, 0)
+
+	if err != nil {
+		fmt.Printf("Canceled %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("You choose status as %q\n", selected)
+
+	var selectedId int
+
+	for _, v := range statuses {
+		if *v.Name == selected {
+			selectedId = *v.ID
+		}
+	}
+
+	return selectedId
 }

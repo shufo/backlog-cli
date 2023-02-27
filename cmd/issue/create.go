@@ -46,11 +46,11 @@ func Create(ctx *cli.Context) error {
 	}
 
 	// Prompt the user to input the issue type, summary, description, priority, and assignee of the new issue, using various get functions
-	issueTypeId := getIssueTypeInput(bl, conf)
+	issueTypeId := getIssueTypeInput(&getIssueTypeInputParam{bl: bl, conf: conf, current: ""})
 	summary := getSummaryInput(&getSummaryInputParam{})
 	description := getDescriptionInput(&getDescriptionInputParam{})
 	priorityId := getPriorityInput(bl)
-	assigneeId := getAssigneeInput(bl, conf)
+	assigneeId := getAssigneeInput(&getAssigneeInputParam{bl: bl, conf: conf})
 
 	licence, err := bl.GetLicence()
 
@@ -61,10 +61,10 @@ func Create(ctx *cli.Context) error {
 	var startDate string
 
 	if *licence.Gantt {
-		startDate = getStartDateInput()
+		startDate = getStartDateInput(&getStartDateInputParam{})
 	}
 
-	dueDate := getDueDateInput()
+	dueDate := getDueDateInput(&getDueDateInputParam{})
 
 	submit := ui.Select("What's next?", []string{"Submit", "Cancel"})
 
@@ -106,9 +106,15 @@ func Create(ctx *cli.Context) error {
 	return nil
 }
 
-func getIssueTypeInput(bl *backlog.Client, conf config.BacklogSettings) *int {
+type getIssueTypeInputParam struct {
+	bl      *backlog.Client
+	conf    config.BacklogSettings
+	current string
+}
+
+func getIssueTypeInput(param *getIssueTypeInputParam) *int {
 	// get issue types
-	issueTypes, err := bl.GetIssueTypes(conf.Project)
+	issueTypes, err := param.bl.GetIssueTypes(param.conf.Project)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -120,8 +126,14 @@ func getIssueTypeInput(bl *backlog.Client, conf config.BacklogSettings) *int {
 		it = append(it, *v.Name)
 	}
 
+	var label string = "Select issue type"
+
+	if param.current != "" {
+		label = fmt.Sprintf("%s (%s)", label, param.current)
+	}
+
 	promptIssueType := promptui.Select{
-		Label: "Select issue type",
+		Label: label,
 		Items: it,
 		Size:  10,
 	}
@@ -147,21 +159,25 @@ func getIssueTypeInput(bl *backlog.Client, conf config.BacklogSettings) *int {
 }
 
 type getSummaryInputParam struct {
-	currentValue string
+	current string
 }
 
 func getSummaryInput(param *getSummaryInputParam) string {
 	validate := func(input string) error {
-		if len(input) > 0 && utf8.RuneCountInString(input) <= 255 {
+		if param.current != "" {
 			return nil
-		}
+		} else {
+			if len(input) > 0 && utf8.RuneCountInString(input) <= 255 {
+				return nil
+			}
 
-		if len(input) == 0 {
-			return errors.New("summary needs at least 1 characters")
-		}
+			if len(input) == 0 {
+				return errors.New("summary needs at least 1 characters")
+			}
 
-		if utf8.RuneCountInString(input) > 255 {
-			return errors.New("summary must be within 255 characters")
+			if utf8.RuneCountInString(input) > 255 {
+				return errors.New("summary must be within 255 characters")
+			}
 		}
 
 		return errors.New("summary must be betwen 1 and 255 characters")
@@ -169,8 +185,8 @@ func getSummaryInput(param *getSummaryInputParam) string {
 
 	var label string
 
-	if param.currentValue != "" {
-		label = fmt.Sprintf("Summary (%s)", param.currentValue)
+	if param.current != "" {
+		label = fmt.Sprintf("Summary (%s)", param.current)
 	} else {
 		label = "Summary"
 	}
@@ -182,6 +198,10 @@ func getSummaryInput(param *getSummaryInputParam) string {
 
 	summary, err := promptSummary.Run()
 
+	if param.current != "" && summary == "" {
+		summary = param.current
+	}
+
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
 		os.Exit(1)
@@ -191,7 +211,7 @@ func getSummaryInput(param *getSummaryInputParam) string {
 }
 
 type getDescriptionInputParam struct {
-	currentValue string
+	current string
 }
 
 func getDescriptionInput(param *getDescriptionInputParam) string {
@@ -222,7 +242,7 @@ func getDescriptionInput(param *getDescriptionInputParam) string {
 	var description string
 
 	if char == editKeyCode {
-		description, err = openEditor(param.currentValue)
+		description, err = openEditor(param.current)
 
 		if err != nil {
 			log.Fatalln(err)
@@ -278,7 +298,13 @@ func getPriorityInput(bl *backlog.Client) *int {
 	return selectedPriorityId
 }
 
-func getAssigneeInput(bl *backlog.Client, conf config.BacklogSettings) int {
+type getAssigneeInputParam struct {
+	bl      *backlog.Client
+	conf    config.BacklogSettings
+	current string
+}
+
+func getAssigneeInput(param *getAssigneeInputParam) int {
 	fmt.Printf(
 		"%s %s\n",
 		color.HiGreenString("?"),
@@ -312,7 +338,7 @@ func getAssigneeInput(bl *backlog.Client, conf config.BacklogSettings) int {
 
 	// Assign self if entered char is `m`
 	if char == 'm' {
-		me, err := bl.GetUserMySelf()
+		me, err := param.bl.GetUserMySelf()
 
 		if err != nil {
 			log.Fatalln(err)
@@ -324,7 +350,7 @@ func getAssigneeInput(bl *backlog.Client, conf config.BacklogSettings) int {
 	// Select user if entered char is `s`
 	excludeGroupMembers := false
 
-	users, err := bl.GetProjectUsers(conf.Project, &backlog.GetProjectUsersOptions{ExcludeGroupMembers: &excludeGroupMembers})
+	users, err := param.bl.GetProjectUsers(param.conf.Project, &backlog.GetProjectUsersOptions{ExcludeGroupMembers: &excludeGroupMembers})
 
 	if err != nil {
 		log.Fatalln(err)
@@ -336,13 +362,25 @@ func getAssigneeInput(bl *backlog.Client, conf config.BacklogSettings) int {
 		memberNames = append(memberNames, *v.Name)
 	}
 
+	// determine cursor position
+	var cursorPos int
+
+	if param.current != "" {
+
+		for i, v := range memberNames {
+			if v == param.current {
+				cursorPos = i
+			}
+		}
+	}
+
 	promptPriority := promptui.Select{
 		Label: "Select assignee",
 		Items: memberNames,
 		Size:  10,
 	}
 
-	_, selectedMember, err := promptPriority.Run()
+	_, selectedMember, err := promptPriority.RunCursorAt(cursorPos, cursorPos-3)
 
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
@@ -445,7 +483,11 @@ func waitForKey(input *waitForKeyInput) (rune, keyboard.Key, error) {
 	}
 }
 
-func getStartDateInput() string {
+type getStartDateInputParam struct {
+	current string
+}
+
+func getStartDateInput(param *getStartDateInputParam) string {
 	fmt.Printf(
 		"%s %s\n",
 		color.HiGreenString("?"),
@@ -480,13 +522,29 @@ func getStartDateInput() string {
 	// if s pressed
 	dates := generateDates(30)
 
-	promptPriority := promptui.Select{
+	var cursorPos int
+
+	if param.current != "" {
+		parsed, err := time.Parse("2006-01-02T00:00:00Z", param.current)
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		for i, v := range dates {
+			if v == parsed.Format("2006-01-02") {
+				cursorPos = i
+			}
+		}
+	}
+
+	promptStartDate := promptui.Select{
 		Label: "Select Start Date",
 		Items: dates,
 		Size:  10,
 	}
 
-	_, selectedDate, err := promptPriority.Run()
+	_, selectedDate, err := promptStartDate.RunCursorAt(cursorPos, 0)
 
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
@@ -496,7 +554,11 @@ func getStartDateInput() string {
 	return selectedDate
 }
 
-func getDueDateInput() string {
+type getDueDateInputParam struct {
+	current string
+}
+
+func getDueDateInput(param *getDueDateInputParam) string {
 	fmt.Printf(
 		"%s %s\n",
 		color.HiGreenString("?"),
@@ -531,17 +593,33 @@ func getDueDateInput() string {
 	// if s pressed
 	dates := generateDates(30)
 
-	promptPriority := promptui.Select{
+	var cursorPos int
+
+	if param.current != "" {
+		parsed, err := time.Parse("2006-01-02T00:00:00Z", param.current)
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		for i, v := range dates {
+			if v == parsed.Format("2006-01-02") {
+				cursorPos = i
+			}
+		}
+	}
+
+	promptDueDate := promptui.Select{
 		Label: "Select Due Date",
 		Items: dates,
 		Size:  10,
 	}
 
-	_, selectedDate, err := promptPriority.Run()
+	_, selectedDate, err := promptDueDate.RunCursorAt(cursorPos, cursorPos)
 
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
-		return ""
+		os.Exit(1)
 	}
 
 	return selectedDate
