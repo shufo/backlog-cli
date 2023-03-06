@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/shufo/backlog-cli/cmd/alias"
 	"github.com/shufo/backlog-cli/cmd/auth"
 	"github.com/shufo/backlog-cli/cmd/issue"
 	"github.com/urfave/cli/v2"
@@ -96,7 +98,7 @@ func Execute() {
 			},
 			{
 				Name:  "auth",
-				Usage: "authentication",
+				Usage: "Authenticate ba with Backlog",
 				Subcommands: []*cli.Command{
 					{
 						Name:      "login",
@@ -111,6 +113,73 @@ func Execute() {
 					},
 				},
 			},
+			{
+				Name:  "alias",
+				Usage: "Aliases can be used to make shortcuts for ba commands or to compose multiple commands.",
+				Subcommands: []*cli.Command{
+					{
+						Name:      "set",
+						Usage:     "Create a shortcut for a ba command",
+						UsageText: "bl alias set <alias> <expansion>\ne.g.\n  bl alias set iv 'issue view'",
+						Action: func(ctx *cli.Context) error {
+							if ctx.Args().Len() == 0 {
+								cli.ShowSubcommandHelpAndExit(ctx, 1)
+							}
+
+							name := ctx.Args().First()
+							expansion := strings.Join(ctx.Args().Tail(), " ")
+
+							alias.Set(name, expansion)
+
+							return nil
+						},
+					},
+					{
+						Name:      "list",
+						Usage:     "List your aliases",
+						UsageText: "bl alias list",
+						Action: func(ctx *cli.Context) error {
+							alias.List()
+
+							return nil
+						},
+					},
+					{
+						Name:      "delete",
+						Usage:     "Delete an alias",
+						UsageText: "bl alias delete <alias>",
+						Action: func(ctx *cli.Context) error {
+							if ctx.Args().Len() == 0 {
+								cli.ShowSubcommandHelpAndExit(ctx, 1)
+							}
+
+							alias.Delete(ctx.Args().First())
+
+							return nil
+						},
+					},
+				},
+			},
+		},
+		Action: func(ctx *cli.Context) error {
+			expansion, err := alias.FindAlias(ctx.Args().First())
+
+			if err != nil {
+				fmt.Printf("unknown command \"%s\" for \"ba\"\n\n", ctx.Args().First())
+				cli.ShowAppHelp(ctx)
+				os.Exit(1)
+			}
+
+			// expand to command
+			var args []string
+
+			args = append(args, os.Args[0])
+			args = append(args, strings.Split(expansion, " ")...)
+			args = append(args, ctx.Args().Tail()...)
+
+			ctx.App.Run(args)
+
+			return nil
 		},
 	}
 

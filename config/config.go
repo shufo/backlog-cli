@@ -220,3 +220,119 @@ func ShowConfigNotFound() {
 	color.Red("backlog.json not found")
 	color.White("You can set by `bl auth login`")
 }
+
+type CommandConfig struct {
+	Aliases Aliases `json:"aliases"`
+}
+
+type Aliases map[string]string
+
+func SetAlias(alias string, expansion string) {
+	configPath := CommandConfigPath()
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		createDefaultCommandConfig()
+	}
+
+	configBytes, err := ioutil.ReadFile(configPath)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var commandConfig CommandConfig
+	err = yaml.Unmarshal(configBytes, &commandConfig)
+
+	if err != nil {
+		log.Fatalf("parse error: %s at %s\n", err, configPath)
+	}
+
+	commandConfig.Aliases[alias] = expansion
+
+	newData, err := yaml.Marshal(&commandConfig)
+
+	if err != nil {
+		log.Fatalf("error marshaling YAML: %v", err)
+	}
+
+	// Write the updated YAML data back to the file
+
+	fmt.Printf("- Adding alias for %s: %s\n", alias, expansion)
+
+	err = ioutil.WriteFile(configPath, newData, 0644)
+	if err != nil {
+		log.Fatalf("error writing file: %v", err)
+	}
+	fmt.Printf("%s Added alias.\n", color.GreenString("✓"))
+}
+
+func DeleteAlias(alias string) error {
+	configPath := CommandConfigPath()
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		createDefaultCommandConfig()
+	}
+
+	configBytes, err := ioutil.ReadFile(configPath)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var commandConfig CommandConfig
+	err = yaml.Unmarshal(configBytes, &commandConfig)
+
+	if err != nil {
+		log.Fatalf("parse error: %s at %s\n", err, configPath)
+	}
+
+	was, ok := commandConfig.Aliases[alias]
+
+	if ok {
+		delete(commandConfig.Aliases, alias)
+		newData, err := yaml.Marshal(&commandConfig)
+
+		if err != nil {
+			log.Fatalf("error marshaling YAML: %v", err)
+		}
+
+		// Write the updated YAML data back to the file
+		err = ioutil.WriteFile(configPath, newData, 0644)
+		if err != nil {
+			log.Fatalf("error writing file: %v", err)
+		}
+
+		fmt.Printf("%s Deleted alias %s; was %s\n", color.RedString("✓"), alias, was)
+
+	} else {
+		fmt.Println("target alias not found")
+		os.Exit(1)
+	}
+
+	return nil
+}
+
+func createDefaultCommandConfig() {
+	file, err := os.Create(CommandConfigPath())
+
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	_, err = file.Write([]byte{})
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CommandConfigPath() string {
+	configDir, err := os.UserConfigDir()
+
+	if err != nil {
+		panic(err)
+	}
+
+	return filepath.Join(configDir, "bl", "config.yml")
+}

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/shufo/backlog-cli/api"
 	"github.com/shufo/backlog-cli/client"
 	"github.com/shufo/backlog-cli/config"
@@ -13,6 +15,11 @@ import (
 )
 
 func List(ctx *cli.Context) error {
+	// start spinner
+	s := spinner.New(spinner.CharSets[14], 100*time.Microsecond)
+	s.Start()
+
+	defer s.Stop()
 	conf, err := config.GetBacklogSetting()
 
 	if err != nil {
@@ -26,7 +33,10 @@ func List(ctx *cli.Context) error {
 
 	if err != nil {
 		log.Fatalln(err)
+		s.Stop()
 	}
+
+	s.Stop()
 
 	// print result
 	result := printer.PrintIssues(&printer.PrintIssuesParams{Issues: issues})

@@ -12,6 +12,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/briandowns/spinner"
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
@@ -25,6 +26,12 @@ import (
 
 // Create is a function that creates a new issue in a backlog management tool, like Jira or Asana. It takes a command-line context object as an input parameter.
 func Create(ctx *cli.Context) error {
+	// start spinner
+	s := spinner.New(spinner.CharSets[14], 100*time.Microsecond)
+	s.Start()
+
+	defer s.Stop()
+
 	// Get configuration settings for the backlog tool
 	conf, err := config.GetBacklogSetting()
 
@@ -45,10 +52,12 @@ func Create(ctx *cli.Context) error {
 		log.Fatalln(err)
 	}
 
+	s.Stop()
+
 	// Prompt the user to input the issue type, summary, description, priority, and assignee of the new issue, using various get functions
 	issueTypeId := getIssueTypeInput(&getIssueTypeInputParam{bl: bl, conf: conf, current: ""})
 	summary := getSummaryInput(&getSummaryInputParam{})
-	description := getDescriptionInput(&getDescriptionInputParam{})
+	description, _ := getDescriptionInput(&getDescriptionInputParam{})
 	priorityId := getPriorityInput(bl)
 	assigneeId := getAssigneeInput(&getAssigneeInputParam{bl: bl, conf: conf})
 
@@ -126,6 +135,18 @@ func getIssueTypeInput(param *getIssueTypeInputParam) *int {
 		it = append(it, *v.Name)
 	}
 
+	// determine cursor position
+	var cursorPos int
+
+	if param.current != "" {
+
+		for i, v := range issueTypes {
+			if *v.Name == param.current {
+				cursorPos = i
+			}
+		}
+	}
+
 	var label string = "Select issue type"
 
 	if param.current != "" {
@@ -138,7 +159,7 @@ func getIssueTypeInput(param *getIssueTypeInputParam) *int {
 		Size:  10,
 	}
 
-	_, selectedIssueType, err := promptIssueType.Run()
+	_, selectedIssueType, err := promptIssueType.RunCursorAt(cursorPos, cursorPos-3)
 
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
@@ -214,7 +235,7 @@ type getDescriptionInputParam struct {
 	current string
 }
 
-func getDescriptionInput(param *getDescriptionInputParam) string {
+func getDescriptionInput(param *getDescriptionInputParam) (string, error) {
 	editor := util.DetectEditor()
 
 	fmt.Printf(
@@ -259,7 +280,11 @@ func getDescriptionInput(param *getDescriptionInputParam) string {
 		os.Exit(1)
 	}
 
-	return description
+	if key == keyboard.KeyEnter {
+		return "", errors.New("skipped")
+	}
+
+	return description, nil
 }
 
 func getPriorityInput(bl *backlog.Client) *int {
@@ -285,7 +310,7 @@ func getPriorityInput(bl *backlog.Client) *int {
 
 	if err != nil {
 		fmt.Printf("Canceled %v\n", err)
-		return nil
+		os.Exit(1)
 	}
 
 	var selectedPriorityId *int
@@ -374,6 +399,7 @@ func getAssigneeInput(param *getAssigneeInputParam) int {
 		}
 	}
 
+	// populate prompt
 	promptPriority := promptui.Select{
 		Label: "Select assignee",
 		Items: memberNames,

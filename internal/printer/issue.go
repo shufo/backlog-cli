@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"log"
+	"time"
 	"unicode/utf8"
 
 	"github.com/charmbracelet/glamour"
@@ -20,6 +21,13 @@ type PrintIssueParams struct {
 	Id    string
 }
 
+const (
+	READY       = 1
+	IN_PROGRESS = 2
+	PROCESSED   = 3
+	CLOSED      = 4
+)
+
 func PrintIssue(param *PrintIssueParams) {
 	// print summary
 	cyan := color.New(color.FgHiCyan)
@@ -34,30 +42,79 @@ func PrintIssue(param *PrintIssueParams) {
 	fmt.Printf(
 		"%s %s %s opened about %s\n",
 		cyan.Sprintf("状態:"),
-		*param.Issue.Status.Name,
+		color.New(statusColor(*param.Issue.Status.ID)).Sprint(*param.Issue.Status.Name),
 		*param.Issue.CreatedUser.Name,
 		TimeDiffString(*param.Issue.Created),
 	)
 
-	// print assignee
-	cyan.Printf("%s: ", "担当者")
+	// print assignee, creator
+	var assignee string
 
 	if param.Issue.Assignee != nil {
-		fmt.Printf("%s\n", *param.Issue.Assignee.Name)
+		assignee = *param.Issue.Assignee.Name
 	} else {
-		fmt.Printf("-\n")
+		assignee = "-"
+	}
+
+	fmt.Printf("%s %s\n", color.CyanString("担当者:"), assignee)
+
+	// print issue type
+	fmt.Printf("%s %s\n", color.CyanString("種別:"), *param.Issue.IssueType.Name)
+
+	// print issue priority
+	fmt.Printf("%s %s\n", color.CyanString("優先度:"), *param.Issue.Priority.Name)
+
+	// print start date, due date
+	if param.Issue.StartDate != nil {
+		parsed, err := time.Parse("2006-01-02T00:00:00Z", *param.Issue.StartDate)
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		fmt.Printf("%s %s\n", color.CyanString("開始日:"), parsed.Format("2006/01/02"))
+	}
+
+	if param.Issue.DueDate != nil {
+		parsed, err := time.Parse("2006-01-02T00:00:00Z", *param.Issue.DueDate)
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		fmt.Printf("%s %s\n", color.CyanString("期限日:"), parsed.Format("2006/01/02"))
 	}
 
 	fmt.Println("")
 
 	// print description
-	out, err := glamour.Render(*param.Issue.Description, "dark")
+	r, _ := glamour.NewTermRenderer(
+		// detect background color and pick either the default dark or light theme
+		glamour.WithAutoStyle(),
+	)
+	out, err := r.Render(*param.Issue.Description)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Print(out)
+}
+
+func statusColor(statusId int) color.Attribute {
+	switch statusId {
+	case READY:
+		return color.FgRed
+	case IN_PROGRESS:
+		return color.FgBlue
+	case PROCESSED:
+		return color.FgHiGreen
+	case CLOSED:
+		return color.FgGreen
+	default:
+		return color.FgWhite
+	}
+
 }
 
 type PrintIssueCommentsParams struct {

@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	github.com/charmbracelet/lipgloss v0.6.0 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/containerd/console v1.0.3 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect

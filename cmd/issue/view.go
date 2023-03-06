@@ -5,7 +5,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/kenzo0107/backlog"
 	"github.com/shufo/backlog-cli/api"
 	"github.com/shufo/backlog-cli/client"
@@ -16,6 +18,12 @@ import (
 )
 
 func View(ctx *cli.Context) error {
+	// start the spinner
+	s := spinner.New(spinner.CharSets[14], 500*time.Millisecond)
+	s.Start()
+
+	defer s.Stop()
+
 	conf, err := config.GetBacklogSetting()
 
 	if err != nil {
@@ -45,12 +53,16 @@ func View(ctx *cli.Context) error {
 	issue, err := api.GetIssue(bl, conf, id)
 
 	if err != nil {
+		s.Stop()
 		log.Fatalln(err)
 	}
 
 	if issue == nil {
+		s.Stop()
 		log.Fatalln("issue is nil")
 	}
+
+	s.Stop()
 
 	// print result
 	printer.PrintIssue(&printer.PrintIssueParams{Issue: issue, Conf: conf, Id: id})

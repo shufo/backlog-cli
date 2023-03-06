@@ -6,7 +6,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/briandowns/spinner"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
 	"github.com/manifoldco/promptui"
@@ -36,6 +38,12 @@ const (
 type CtrlCMsg struct{}
 
 func Edit(ctx *cli.Context) error {
+	// start the spinner
+	s := spinner.New(spinner.CharSets[14], 500*time.Millisecond)
+	s.Start()
+
+	defer s.Stop()
+
 	conf, err := config.GetBacklogSetting()
 
 	if err != nil {
@@ -44,14 +52,13 @@ func Edit(ctx *cli.Context) error {
 
 	bl := client.New(conf)
 
-	fmt.Println(color.HiGreenString("?") + color.HiBlueString(" What would you like to edit?") + " [Use arrows to move, space to select, <right> to all, <left> to none, type to filter]")
-
 	var options []string = []string{
 		"Issue Type",
 		"Summary",
 		"Description",
 		"Assignee",
 		"Status",
+		"Priority",
 	}
 
 	licence, err := bl.GetLicence()
@@ -66,6 +73,31 @@ func Edit(ctx *cli.Context) error {
 	}
 
 	options = append(options, "Due Date")
+
+	if ctx.Args().Len() == 0 {
+		s.Stop()
+		style := lipgloss.NewStyle().
+			SetString("Not enough arguments (missing \"Issue id\").\n $ ba issue edit <issue id>").
+			Bold(true).
+			Foreground(lipgloss.Color("#EFA554")).
+			Background(lipgloss.Color("#E356A7")).
+			Padding(1)
+		fmt.Println(style)
+		os.Exit(1)
+	}
+
+	issueId := ctx.Args().First()
+
+	issue, err := bl.GetIssue(fmt.Sprintf("%s-%s", conf.Project, issueId))
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// stop spinner
+	s.Stop()
+
+	fmt.Println(color.HiGreenString("?") + color.HiBlueString(" What would you like to edit?") + " [Use arrows to move, space to select, <right> to all, <left> to none, type to filter]")
 
 	p := tea.NewProgram(model{
 		options:  options,
@@ -86,22 +118,10 @@ func Edit(ctx *cli.Context) error {
 			os.Exit(1)
 		}
 
-		if len(m.selected) == 0 {
-			fmt.Println("Canceled")
-			os.Exit(1)
-		}
-
 		selected = m.getSelectedOptions()
 	}
 
 	var params *backlog.UpdateIssueInput = &backlog.UpdateIssueInput{}
-
-	issueId := ctx.Args().First()
-	issue, err := bl.GetIssue(fmt.Sprintf("%s-%s", conf.Project, issueId))
-
-	if err != nil {
-		log.Fatalln(err)
-	}
 
 	var changed bool
 
@@ -124,9 +144,19 @@ func Edit(ctx *cli.Context) error {
 	}
 
 	if util.ContainsString(selected, "Description") {
-		description := getDescriptionInput(&getDescriptionInputParam{current: *issue.Description})
-		params.Description = &description
+		description, err := getDescriptionInput(&getDescriptionInputParam{current: *issue.Description})
 
+		// skipped
+		if err != nil {
+			description = *issue.Description
+		}
+
+		// if something input
+		if description != "" {
+			params.Description = &description
+		}
+
+		// check if description was changed
 		if *issue.Description != description {
 			changed = true
 		}
@@ -171,6 +201,20 @@ func Edit(ctx *cli.Context) error {
 		}
 
 		if *issue.Status.ID != statusId {
+			changed = true
+		}
+
+	}
+
+	if util.ContainsString(selected, "Priority") {
+		priorityId := getPriorityInput(bl)
+		params.PriorityID = priorityId
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		if *issue.Priority.ID != *priorityId {
 			changed = true
 		}
 
@@ -248,7 +292,7 @@ func Edit(ctx *cli.Context) error {
 	}
 
 	if !changed {
-		fmt.Println("issue has nothing changed.")
+		fmt.Println("There is no change for the issue.")
 		os.Exit(1)
 	}
 
@@ -259,6 +303,7 @@ func Edit(ctx *cli.Context) error {
 	}
 
 	fmt.Printf("issue %s updated!\n", *updatedIssue.IssueKey)
+	fmt.Printf("https://%s.%s/view/%s\n", conf.Organization, conf.BacklogDomain, *updatedIssue.IssueKey)
 
 	return nil
 }
