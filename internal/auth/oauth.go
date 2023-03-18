@@ -109,7 +109,7 @@ func WaitForAuthorizationApprove(space string, authCode string, spinner *spinner
 		return data.AuthorizationCode, nil
 	}
 
-	return "", fmt.Errorf("%s authorization failed", resp.StatusCode)
+	return "", fmt.Errorf("%d authorization failed", resp.StatusCode)
 }
 
 type RequestAccessTokenResponse struct {

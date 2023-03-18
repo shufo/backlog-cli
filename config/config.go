@@ -69,7 +69,7 @@ func ReadConfig() (Config, error) {
 	err = yaml.Unmarshal(configBytes, &hostConfig)
 
 	if err != nil {
-		log.Fatalf("parse error: %s at %s\n", err, configPath)
+		log.Fatalf("parse error: %s at %s\n", err, configPath())
 	}
 
 	return hostConfig, nil
