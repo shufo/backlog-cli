@@ -1,6 +1,6 @@
 # Backlog CLI
 
-[Backlog](https://backlog.com/) CLI like [gh](https://cli.github.com/).
+[Backlog](https://backlog.com/) CLI like [gh](https://cli.github.com/)
 
 ## Installation
 
