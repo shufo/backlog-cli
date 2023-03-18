@@ -7,7 +7,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.23.2
 	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
-	github.com/jedib0t/go-pretty/v6 v6.4.4
+	github.com/jedib0t/go-pretty/v6 v6.4.6
 	github.com/manifoldco/promptui v0.9.0
 	github.com/shufo/find-config v0.1.1
 	github.com/urfave/cli/v2 v2.24.4
