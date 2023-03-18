@@ -13,9 +13,9 @@ import (
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
 	"github.com/manifoldco/promptui"
-	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/internal/auth"
 	"github.com/shufo/backlog-cli/internal/client"
+	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/util"
 	"github.com/urfave/cli/v2"
 )

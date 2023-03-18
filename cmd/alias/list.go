@@ -6,7 +6,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/shufo/backlog-cli/config"
+	"github.com/shufo/backlog-cli/internal/config"
 	"gopkg.in/yaml.v3"
 )
 

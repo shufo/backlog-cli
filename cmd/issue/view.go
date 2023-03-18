@@ -9,9 +9,9 @@ import (
 
 	"github.com/briandowns/spinner"
 	"github.com/kenzo0107/backlog"
-	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/internal/api"
 	"github.com/shufo/backlog-cli/internal/client"
+	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/printer"
 	"github.com/shufo/backlog-cli/util"
 	"github.com/urfave/cli/v2"

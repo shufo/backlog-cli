@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/internal/api"
 	"github.com/shufo/backlog-cli/internal/client"
+	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/printer"
 	"github.com/urfave/cli/v2"
 )

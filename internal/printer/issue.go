@@ -12,7 +12,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/kenzo0107/backlog"
-	"github.com/shufo/backlog-cli/config"
+	"github.com/shufo/backlog-cli/internal/config"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

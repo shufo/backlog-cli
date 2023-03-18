@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/kenzo0107/backlog"
-	"github.com/shufo/backlog-cli/config"
+	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/urfave/cli/v2"
 )
 

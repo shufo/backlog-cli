@@ -7,8 +7,8 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/kenzo0107/backlog"
-	"github.com/shufo/backlog-cli/config"
 	"github.com/shufo/backlog-cli/internal/auth"
+	"github.com/shufo/backlog-cli/internal/config"
 )
 
 type WithAuthorizationHttpClient interface {

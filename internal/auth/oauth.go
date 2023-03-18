@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/shufo/backlog-cli/config"
+	"github.com/shufo/backlog-cli/internal/config"
 )
 
 type OauthAuthorizationCodeResponse struct {
