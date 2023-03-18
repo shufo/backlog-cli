@@ -5,17 +5,17 @@ go 1.18
 require (
 	github.com/briandowns/spinner v1.21.0
 	github.com/charmbracelet/bubbletea v0.23.2
+	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
 	github.com/jedib0t/go-pretty/v6 v6.4.4
 	github.com/manifoldco/promptui v0.9.0
 	github.com/shufo/find-config v0.1.1
-	github.com/urfave/cli/v2 v2.24.4
+	github.com/urfave/cli/v2 v2.25.0
 	golang.org/x/crypto v0.6.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/charmbracelet/lipgloss v0.6.0 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/containerd/console v1.0.3 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
