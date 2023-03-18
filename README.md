@@ -46,7 +46,7 @@ $ ba issue view 123
 $ ba issue view 123 -w
 ```
 
-- Create Issue
+- Create a new Issue
 
 ```bash
 $ ba issue create
