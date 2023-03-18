@@ -20,7 +20,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/client"
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/ui"
-	"github.com/shufo/backlog-cli/util"
+	"github.com/shufo/backlog-cli/internal/util"
 	"github.com/urfave/cli/v2"
 )
 
