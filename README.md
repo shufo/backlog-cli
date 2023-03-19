@@ -98,3 +98,32 @@ $ bk alias delete iv
 
 ![2023-03-19-16-03-07-resize](https://user-images.githubusercontent.com/1641039/226159757-6441d5b8-b70f-4371-9ae8-2eabe8db0993.gif)
 
+## TODO
+
+- [ ] Add command like `gh issue comment`
+
+## Contributing
+
+1.  Fork it
+2.  Create your feature branch (`git checkout -b my-new-feature`)
+3.  Commit your changes (`git commit -am 'Add some feature'`)
+4.  Push to the branch (`git push origin my-new-feature`)
+5.  Create new Pull Request
+
+## Testing
+
+```bash
+$ go test -v ./...
+```
+
+## Development
+
+```bash
+$ GO111MODULE=off go get github.com/oxequa/realize
+$ realize start
+$ ./app <option> <args>
+```
+
+## LICENSE
+
+MIT
