@@ -177,6 +177,10 @@ func Execute() {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
+			if ctx.Args().Len() == 0 {
+				cli.ShowAppHelpAndExit(ctx, 0)
+			}
+
 			expansion, err := alias.FindAlias(ctx.Args().First())
 
 			if err != nil {
