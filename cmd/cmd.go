@@ -13,8 +13,8 @@ import (
 
 func Execute() {
 	app := &cli.App{
-		Name:  "bl",
-		Usage: "Open a URL in the default web browser with an embedded parameter",
+		Name:  "bk",
+		Usage: "Work seamlessly with Backlog from the command line.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "config",
@@ -180,7 +180,7 @@ func Execute() {
 			expansion, err := alias.FindAlias(ctx.Args().First())
 
 			if err != nil {
-				fmt.Printf("unknown command \"%s\" for \"ba\"\n\n", ctx.Args().First())
+				fmt.Printf("unknown command \"%s\" for \"bk\"\n\n", ctx.Args().First())
 				cli.ShowAppHelp(ctx)
 				os.Exit(1)
 			}
