@@ -22,7 +22,8 @@ You must first authenticate with the following command (Required to login to you
 $ bk auth login
 ```
 
-![2023-03-19 12-25-16](https://user-images.githubusercontent.com/1641039/226151964-9c5d4e9b-df6e-443e-981b-19a21160d920.gif)
+![2023-03-19-14-46-29-resize](https://user-images.githubusercontent.com/1641039/226156355-46404529-a869-45b6-9d90-fef45c8ab699.gif)
+
 
 ### Troubleshoot
 
@@ -52,11 +53,17 @@ $ bk issue view 123
 $ bk issue view 123 -w
 ```
 
+![2023-03-19-13-31-31-resize](https://user-images.githubusercontent.com/1641039/226156048-63acb270-0a6a-422e-9409-1cdbc4e5c9e4.gif)
+
+
 - Create a new Issue
 
 ```bash
 $ bk issue create
 ```
+
+![2023-03-19-14-56-35-resize](https://user-images.githubusercontent.com/1641039/226156978-4658223d-d172-4522-a7b4-9ea04adf8f05.gif)
+
 
 - Edit Issue
 
