@@ -1,6 +1,6 @@
 # Backlog CLI
 
-[Backlog](https://backlog.com/) CLI like [gh](https://cli.github.com/)
+[Backlog](https://backlog.com/) CLI: like [gh](https://cli.github.com/)
 
 ## Installation
 
@@ -8,21 +8,27 @@ Download binary by installation script
 
 ```bash
 # if you want to install to /usr/local/bin
-$ curl -sSfL https://raw.githubusercontent.com/shufo/ecs-fargate-oneshot/master/install.sh  | sudo sh -s - -b /usr/local/bin
+$ curl -sSfL https://raw.githubusercontent.com/shufo/backlog-cli/main/install.sh  | sudo sh -s - -b /usr/local/bin
 
 # if you want to install to /usr/bin
-$ curl -sSfL https://raw.githubusercontent.com/shufo/ecs-fargate-oneshot/master/install.sh  | sudo sh -s - -b /usr/bin
+$ curl -sSfL https://raw.githubusercontent.com/shufo/backlog-cli/main/install.sh  | sudo sh -s - -b /usr/bin
 ```
 
 ## Authentication
 
+You must first authenticate with the following command (Required to login to your organization)
+
 ```bash
-$ ba auth login
+$ bk auth login
 ```
+
+![2023-03-19 12-25-16](https://user-images.githubusercontent.com/1641039/226151964-9c5d4e9b-df6e-443e-981b-19a21160d920.gif)
 
 ### Troubleshoot
 
-If you had an error like `you are not logged in`
+If you had an error like below. Please logout then login to your organization.
+
+<img width="808" alt="image" src="https://user-images.githubusercontent.com/1641039/226149627-fa45605a-3698-40e3-a0c7-f9844221398a.png">
 
 ## Usage
 
@@ -31,56 +37,56 @@ If you had an error like `you are not logged in`
 - List Issues
 
 ```bash
-$ ba issue list
+$ bk issue list
 # filter isseu assigned to me
-$ ba issue list --me
+$ bk issue list --me
 # view issue list on web
-$ ba issue list --web
+$ bk issue list --web
 ```
 
 - View Issue
 
 ```bash
-$ ba issue view 123
+$ bk issue view 123
 # view issut on web
-$ ba issue view 123 -w
+$ bk issue view 123 -w
 ```
 
 - Create a new Issue
 
 ```bash
-$ ba issue create
+$ bk issue create
 ```
 
 - Edit Issue
 
 ```bash
-$ ba issue create
-$ ba issue edit 123
+$ bk issue create
+$ bk issue edit 123
 ```
 
 - View Relevant issues
 
 ```bash
-$ ba issue status
+$ bk issue status
 ```
 
 ### Alias
 
-- Create a shortcut for a `ba` command
+- Create a shortcut for a `bk` command
 
 ```bash
-$ ba alias set iv 'issue view'
+$ bk alias set iv 'issue view'
 ```
 
 - List aliases
 
 ```bash
-$ ba alias list
+$ bk alias list
 ```
 
 - Delete an alias
 
 ```bash
-$ ba alias delete iv
+$ bk alias delete iv
 ```
