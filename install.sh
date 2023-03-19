@@ -370,7 +370,7 @@ EOF
 PROJECT_NAME="backlog-cli"
 OWNER=shufo
 REPO="backlog-cli"
-BINARY=bk
+BINARY=backlog-cli
 FORMAT=tar.gz
 OS=$(uname_os)
 ARCH=$(uname_arch)
