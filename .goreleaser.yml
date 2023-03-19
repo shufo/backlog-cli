@@ -8,7 +8,7 @@ before:
     - go generate ./...
 builds:
   - main: .
-    binary: ba
+    binary: bk
     ldflags:
       - -s -w
       - -X main.Version={{.Version}}
