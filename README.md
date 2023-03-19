@@ -53,7 +53,7 @@ $ bk issue view 123
 $ bk issue view 123 -w
 ```
 
-![2023-03-19-13-31-31-resize](https://user-images.githubusercontent.com/1641039/226156048-63acb270-0a6a-422e-9409-1cdbc4e5c9e4.gif)
+![2023-03-19-15-19-01-resize](https://user-images.githubusercontent.com/1641039/226157765-ffdb7490-7674-4031-a92b-5376236d3e4f.gif)
 
 
 - Create a new Issue
