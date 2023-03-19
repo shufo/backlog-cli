@@ -68,6 +68,8 @@ $ bk issue create
 $ bk issue edit 123
 ```
 
+![2023-03-19-15-50-06-resize](https://user-images.githubusercontent.com/1641039/226159273-810e430a-2d0a-40ce-b578-57bb5dc34a8f.gif)
+
 - View Relevant issues
 
 ```bash
@@ -93,3 +95,6 @@ $ bk alias list
 ```bash
 $ bk alias delete iv
 ```
+
+![2023-03-19-16-03-07-resize](https://user-images.githubusercontent.com/1641039/226159757-6441d5b8-b70f-4371-9ae8-2eabe8db0993.gif)
+
