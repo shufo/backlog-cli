@@ -218,7 +218,7 @@ func FindConfig(name string) (string, error) {
 
 func ShowConfigNotFound() {
 	color.Red("backlog.json not found")
-	color.White("You can set by `bl auth login`")
+	color.White("You can set by `bk auth login`")
 }
 
 type CommandConfig struct {
