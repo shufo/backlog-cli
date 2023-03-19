@@ -25,6 +25,7 @@ func List(ctx *cli.Context) error {
 	conf, err := config.GetBacklogSetting()
 
 	if err != nil {
+		s.Stop()
 		config.ShowConfigNotFound()
 		os.Exit(1)
 	}

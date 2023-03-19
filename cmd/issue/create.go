@@ -37,6 +37,7 @@ func Create(ctx *cli.Context) error {
 
 	// If there is an error getting the settings, print an error message and exit the program
 	if err != nil {
+		s.Stop()
 		config.ShowConfigNotFound()
 		os.Exit(1)
 	}
