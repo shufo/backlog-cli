@@ -24,7 +24,6 @@ $ bk auth login
 
 ![2023-03-19-14-46-29-resize](https://user-images.githubusercontent.com/1641039/226156355-46404529-a869-45b6-9d90-fef45c8ab699.gif)
 
-
 ### Troubleshoot
 
 If you had an error like below. Please logout then login to your organization.
@@ -55,7 +54,6 @@ $ bk issue view 123 -w
 
 ![2023-03-19-15-19-01-resize](https://user-images.githubusercontent.com/1641039/226157765-ffdb7490-7674-4031-a92b-5376236d3e4f.gif)
 
-
 - Create a new Issue
 
 ```bash
@@ -64,11 +62,9 @@ $ bk issue create
 
 ![2023-03-19-14-56-35-resize](https://user-images.githubusercontent.com/1641039/226156978-4658223d-d172-4522-a7b4-9ea04adf8f05.gif)
 
-
 - Edit Issue
 
 ```bash
-$ bk issue create
 $ bk issue edit 123
 ```
 
