@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -11,6 +12,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/client"
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/printer"
+	"github.com/shufo/backlog-cli/internal/util"
 	"github.com/urfave/cli/v2"
 )
 
@@ -28,6 +30,26 @@ func List(ctx *cli.Context) error {
 	}
 
 	bl := client.New(conf)
+
+	if ctx.Bool("web") || util.HasFlag(ctx, "-w", "--web") {
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		s.Stop()
+
+		url := fmt.Sprintf("https://%s.%s/find/%s?allOver=false&offset=0&order=false&simpleSearch=true&sort=UPDATED", conf.Organization, conf.BacklogDomain, conf.Project)
+
+		cmd := exec.Command("open", url)
+
+		err = cmd.Run()
+
+		if err != nil {
+			return cli.Exit("Error opening URL: "+err.Error(), 1)
+		}
+
+		return nil
+	}
 
 	issues, err := api.GetIssueList(bl, conf, ctx)
 
