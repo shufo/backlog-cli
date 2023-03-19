@@ -98,6 +98,18 @@ $ bk alias delete iv
 
 ![2023-03-19-16-03-07-resize](https://user-images.githubusercontent.com/1641039/226159757-6441d5b8-b70f-4371-9ae8-2eabe8db0993.gif)
 
+## Configuring backlog-cli
+
+To configure project wide settings, put `backlog.json` in your repository root, backlog-cli will treat it as settings files.
+
+```json
+{
+  "backlog_domain": "backlog.com",
+  "organization": "your_organization", // <your_organization>.backlog.com
+  "project": "MYPROJECT" // your project key
+}
+```
+
 ## TODO
 
 - [ ] Add command like `gh issue comment`
