@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.1](https://github.com/shufo/backlog-cli/compare/v0.2.0...v0.2.1) (2023-03-20)
+
+
+### Bug Fixes
+
+* 🐛 change usage text from bl to bk ([cf4d4d8](https://github.com/shufo/backlog-cli/commit/cf4d4d808f2d76b0a66ab443dee5f1e8380be1a3))
+* 🐛 spinner does not stopped on error ([7f23e35](https://github.com/shufo/backlog-cli/commit/7f23e35d401ef4323db289277bf80af223fb9299))
+* 🐛 use uuid for auth code ([1eed17a](https://github.com/shufo/backlog-cli/commit/1eed17acd3acf492e6ca0a1d28bd6cd182c01d0f))
+
+
+### Miscellaneous
+
+* 🤖 add entrypoint for install command ([472753b](https://github.com/shufo/backlog-cli/commit/472753bd19574e64ecc15a9d6b4220b011306447))
+
 ## [0.2.0](https://github.com/shufo/backlog-cli/compare/v0.1.0...v0.2.0) (2023-03-19)
 
 
