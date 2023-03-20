@@ -81,7 +81,11 @@ func Login(c *cli.Context) error {
 		settings.Organization = org
 	}
 
-	authCode := util.Genrate7DigitsRandomNumber()
+	authCode, err := util.GenrateUuidV4()
+
+	if err != nil {
+		log.Fatalln("Error generating UUID")
+	}
 
 	// Create a new spinner with the default configuration
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
