@@ -6,7 +6,7 @@ This project aims to provide a Backlog CLI that replicates the user experience o
 
 ## Installation
 
-Download binary by installation script
+Download the binary either by using the installation script or by directly downloading it from the [Releases](https://github.com/shufo/backlog-cli/releases).
 
 ```bash
 # if you want to install to /usr/local/bin
