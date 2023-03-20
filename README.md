@@ -2,7 +2,7 @@
 
 [Backlog](https://backlog.com/) CLI: like [gh](https://cli.github.com/)
 
-This project is designed to deliver a Backlog CLI that replicates the user experience and functionality of the official GitHub CLI.
+This project aims to provide a Backlog CLI that replicates the user experience of the official GitHub CLI.
 
 ## Installation
 
