@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://github.com/shufo/backlog-cli/compare/v0.3.4...v0.3.5) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 create app config directory if not exists ([d257870](https://github.com/shufo/backlog-cli/commit/d2578701c83631155b863da91def614969a332de))
+
 ## [0.3.4](https://github.com/shufo/backlog-cli/compare/v0.3.3...v0.3.4) (2023-03-21)
 
 
