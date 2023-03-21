@@ -8,7 +8,7 @@ import (
 	"github.com/shufo/backlog-cli/cmd/alias"
 	"github.com/shufo/backlog-cli/cmd/auth"
 	"github.com/shufo/backlog-cli/cmd/issue"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func Execute() {
@@ -27,7 +27,7 @@ func Execute() {
 			{
 				Name:  "issue",
 				Usage: "Work with backlog issues",
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name:      "view",
 						Usage:     "view issue",
@@ -114,7 +114,7 @@ func Execute() {
 			{
 				Name:  "auth",
 				Usage: "Authenticate ba with Backlog",
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name:      "login",
 						Usage:     "Login to backlog organization.\nYou can find organization name at your backlog url https://<organization>.backlog.com/",
@@ -131,7 +131,7 @@ func Execute() {
 			{
 				Name:  "alias",
 				Usage: "Aliases can be used to make shortcuts for ba commands or to compose multiple commands.",
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name:      "set",
 						Usage:     "Create a shortcut for a ba command",

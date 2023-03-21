@@ -17,7 +17,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/client"
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/util"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func Login(c *cli.Context) error {

@@ -10,7 +10,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/client"
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/printer"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func Status(ctx *cli.Context) error {

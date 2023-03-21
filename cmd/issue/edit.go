@@ -16,7 +16,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/ui"
 	"github.com/shufo/backlog-cli/internal/util"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 type model struct {

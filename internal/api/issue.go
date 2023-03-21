@@ -7,7 +7,7 @@ import (
 
 	"github.com/kenzo0107/backlog"
 	"github.com/shufo/backlog-cli/internal/config"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func GetIssue(bl *backlog.Client, setting config.BacklogSettings, id string) (*backlog.Issue, error) {
