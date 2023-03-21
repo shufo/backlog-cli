@@ -109,6 +109,12 @@ func Execute() {
 						UsageText: "bk issue edit <issue_id> [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Edit(ctx) },
 					},
+					{
+						Name:      "comment",
+						Usage:     "Add new comment on issue",
+						UsageText: "bk issue comment <issue_id> [options]",
+						Action:    func(ctx *cli.Context) error { return issue.Comment(ctx) },
+					},
 				},
 			},
 			{
