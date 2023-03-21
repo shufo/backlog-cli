@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -111,8 +112,23 @@ func Login(c *cli.Context) error {
 
 	// Open the URL in the default web browser
 	fmt.Printf("Opening %s for Authorization...", oauthUrl)
-	cmd := exec.Command("open", oauthUrl)
+
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer.exe", oauthUrl)
+	case "darwin":
+		cmd = exec.Command("open", oauthUrl)
+	case "linux":
+		cmd = exec.Command("xdg-open", oauthUrl)
+	default:
+		fmt.Printf("Unsupported platform: %s\n", runtime.GOOS)
+		os.Exit(1)
+	}
+
 	err = cmd.Run()
+
 	if err != nil {
 		return cli.Exit("Error opening URL: "+err.Error(), 1)
 	}
