@@ -63,7 +63,7 @@ func Execute() {
 								Aliases: []string{"m"},
 								Usage:   "Show issues assigned to me",
 							},
-							&cli.Uint64Flag{
+							&cli.IntFlag{
 								Name:    "limit",
 								Aliases: []string{"L"},
 								Usage:   "Maximum number of issues to fetch",
