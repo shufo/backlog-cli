@@ -78,6 +78,12 @@ $ bk issue edit 123
 $ bk issue status
 ```
 
+- Comment to issue
+
+```bash
+$ bk issue comment 32
+```
+
 ### Alias
 
 - Create a shortcut for a `bk` command
