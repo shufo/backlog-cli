@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/shufo/backlog-cli/compare/v0.3.2...v0.3.3) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 exit status 1 on open url in windows ([688433d](https://github.com/shufo/backlog-cli/commit/688433d4675f0fd06e7b47522455a230026d3ee6))
+
 ## [0.3.2](https://github.com/shufo/backlog-cli/compare/v0.3.1...v0.3.2) (2023-03-21)
 
 
