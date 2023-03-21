@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/shufo/backlog-cli/compare/v0.3.1...v0.3.2) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 auth login does not work on wsl on windows ([ab245cf](https://github.com/shufo/backlog-cli/commit/ab245cffc6fbdeb0a0bdb7cea55ce2ad0fadd9ab))
+
 ## [0.3.1](https://github.com/shufo/backlog-cli/compare/v0.3.0...v0.3.1) (2023-03-21)
 
 
