@@ -21,7 +21,7 @@ import (
 	"github.com/shufo/backlog-cli/internal/config"
 	"github.com/shufo/backlog-cli/internal/ui"
 	"github.com/shufo/backlog-cli/internal/util"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 // Create is a function that creates a new issue in a backlog management tool, like Jira or Asana. It takes a command-line context object as an input parameter.
