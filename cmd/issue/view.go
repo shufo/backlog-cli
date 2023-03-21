@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -41,11 +40,7 @@ func View(ctx *cli.Context) error {
 
 	if ctx.Bool("web") || util.HasFlag(ctx, "-w", "--web") {
 		url := fmt.Sprintf("https://%s.%s/view/%s-%s", conf.Organization, conf.BacklogDomain, conf.Project, id)
-		cmd := exec.Command("open", url)
-		err = cmd.Run()
-		if err != nil {
-			return cli.Exit("Error opening URL: "+err.Error(), 1)
-		}
+		util.OpenUrlInBrowser(url)
 
 		return nil
 	}

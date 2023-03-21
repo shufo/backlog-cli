@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -41,13 +40,7 @@ func List(ctx *cli.Context) error {
 
 		url := fmt.Sprintf("https://%s.%s/find/%s?allOver=false&offset=0&order=false&simpleSearch=true&sort=UPDATED", conf.Organization, conf.BacklogDomain, conf.Project)
 
-		cmd := exec.Command("open", url)
-
-		err = cmd.Run()
-
-		if err != nil {
-			return cli.Exit("Error opening URL: "+err.Error(), 1)
-		}
+		util.OpenUrlInBrowser(url)
 
 		return nil
 	}
