@@ -77,13 +77,19 @@ func ReadConfig() (Config, error) {
 
 func WriteConfig(space string, update *HostConfig) {
 	configPath := configPath()
+
+	var hostConfig Config = make(Config)
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		createDefaultHostsConfig()
+	}
+
 	configBytes, err := ioutil.ReadFile(configPath)
 
 	if err != nil {
 		panic(err)
 	}
 
-	var hostConfig Config
 	err = yaml.Unmarshal(configBytes, &hostConfig)
 
 	if err != nil {
@@ -327,6 +333,21 @@ func createDefaultCommandConfig() {
 	}
 }
 
+func createDefaultHostsConfig() {
+	file, err := os.Create(HostsConfigPath())
+
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	_, err = file.Write([]byte{})
+
+	if err != nil {
+		panic(err)
+	}
+}
+
 func CommandConfigPath() string {
 	configDir, err := os.UserConfigDir()
 
@@ -335,4 +356,14 @@ func CommandConfigPath() string {
 	}
 
 	return filepath.Join(configDir, "bl", "config.yml")
+}
+
+func HostsConfigPath() string {
+	configDir, err := os.UserConfigDir()
+
+	if err != nil {
+		panic(err)
+	}
+
+	return filepath.Join(configDir, "bl", "hosts.yml")
 }
