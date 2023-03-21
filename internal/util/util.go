@@ -209,3 +209,37 @@ func waitForKey(input *waitForKeyInput) (rune, keyboard.Key, error) {
 		}
 	}
 }
+
+func OpenUrlInBrowser(url string) {
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer.exe", url)
+	case "darwin":
+		cmd = exec.Command("open", url)
+	case "linux":
+		if IsWSL() {
+			cmd = exec.Command("cmd.exe", "/C", "start", url)
+		} else {
+			cmd = exec.Command("xdg-open", url)
+		}
+	default:
+		fmt.Printf("Unsupported platform: %s\n", runtime.GOOS)
+		os.Exit(1)
+	}
+
+	err := cmd.Run()
+
+	if err != nil {
+		fmt.Printf("Error opening URL: %s\n", err)
+		os.Exit(1)
+	}
+
+}
+
+func IsWSL() bool {
+	_, err := os.Stat("/proc/sys/fs/binfmt_misc/WSLInterop")
+
+	return !os.IsNotExist(err)
+}
