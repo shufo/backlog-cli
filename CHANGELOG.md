@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.6](https://github.com/shufo/backlog-cli/compare/v0.3.5...v0.3.6) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 invalid int flag ([e39fe9a](https://github.com/shufo/backlog-cli/commit/e39fe9a543dc938b098739d2e14e409eba787d9e))
+
 ## [0.3.5](https://github.com/shufo/backlog-cli/compare/v0.3.4...v0.3.5) (2023-03-21)
 
 
