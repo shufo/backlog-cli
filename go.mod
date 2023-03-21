@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/urfave/cli/v3 v3.0.0-alpha2
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/crypto v0.1.0
 )
 
 require (
@@ -46,7 +46,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/shufo/find-config v0.1.0
+	github.com/shufo/find-config v0.1.1
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	github.com/yuin/goldmark v1.5.4 // indirect
 	github.com/yuin/goldmark-emoji v1.0.1 // indirect
