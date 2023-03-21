@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/shufo/backlog-cli/compare/v0.3.3...v0.3.4) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 error when hosts config does not exists ([5b1dc63](https://github.com/shufo/backlog-cli/commit/5b1dc63935c069bf67980e5b7f5e3f7f6e282529))
+
 ## [0.3.3](https://github.com/shufo/backlog-cli/compare/v0.3.2...v0.3.3) (2023-03-21)
 
 
