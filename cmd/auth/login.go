@@ -123,7 +123,7 @@ func Login(c *cli.Context) error {
 	s.Stop()
 
 	if err != nil {
-		log.Fatalln("Authorization Failed.")
+		log.Fatalln("Authorization Failed.", err)
 	}
 
 	fmt.Println("Authorization Success!")
