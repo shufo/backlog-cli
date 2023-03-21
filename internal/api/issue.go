@@ -15,7 +15,7 @@ func GetIssue(bl *backlog.Client, setting config.BacklogSettings, id string) (*b
 }
 
 func GetIssueComments(bl *backlog.Client, setting config.BacklogSettings, id string) ([]*backlog.IssueComment, error) {
-	options := &backlog.GetIssueCommentsOptions{}
+	options := &backlog.GetIssueCommentsOptions{Order: "asc"}
 
 	return bl.GetIssueComments(fmt.Sprintf("%s-%s", setting.Project, id), options)
 }
