@@ -31,7 +31,7 @@ func Execute() {
 					{
 						Name:      "view",
 						Usage:     "view issue",
-						UsageText: "bk issue view <issue_number>",
+						UsageText: "bk issue view <issue_id>",
 						ArgsUsage: "<issue_num>",
 						Action:    func(ctx *cli.Context) error { return issue.View(ctx) },
 						Flags: []cli.Flag{
@@ -106,7 +106,7 @@ func Execute() {
 					{
 						Name:      "edit",
 						Usage:     "Edit an issue on Backlog.",
-						UsageText: "bk issue edit [options]",
+						UsageText: "bk issue edit <issue_id> [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Edit(ctx) },
 					},
 				},
