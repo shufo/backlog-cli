@@ -334,6 +334,18 @@ func createDefaultCommandConfig() {
 }
 
 func createDefaultHostsConfig() {
+	userConfigDir, err := os.UserConfigDir()
+
+	if err != nil {
+		panic(err)
+	}
+
+	appConfigDir := filepath.Join(userConfigDir, "bl")
+
+	if _, err := os.Stat(appConfigDir); os.IsNotExist(err) {
+		os.MkdirAll(appConfigDir, 0755)
+	}
+
 	file, err := os.Create(HostsConfigPath())
 
 	if err != nil {
