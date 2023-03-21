@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.0](https://github.com/shufo/backlog-cli/compare/v0.2.1...v0.3.0) (2023-03-21)
+
+
+### Features
+
+* 🎸 `issue comment` command ([c1b855c](https://github.com/shufo/backlog-cli/commit/c1b855c5b88bb31a2ec5396eeb3adbed4296dbbb))
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/shufo/find-config to v0.1.1 ([ef7d7fe](https://github.com/shufo/backlog-cli/commit/ef7d7feb33b3e6d24e866f80e74527e50e44a1fc))
+
+
+### Miscellaneous
+
+* 🤖 bump urfave/cli from v2 to v3 ([a008c38](https://github.com/shufo/backlog-cli/commit/a008c3838653d16bf5fca3bbb69f4cf4a756fa5b))
+* 🤖 upgrade dependencies ([68e780f](https://github.com/shufo/backlog-cli/commit/68e780f27155ef822d55a21b5ab6f399cdaa225b))
+* **deps:** bump golang.org/x/crypto ([7d43439](https://github.com/shufo/backlog-cli/commit/7d43439a49d21601c148eeb6e01b19228a5b9057))
+
 ## [0.2.1](https://github.com/shufo/backlog-cli/compare/v0.2.0...v0.2.1) (2023-03-20)
 
 
