@@ -229,13 +229,7 @@ func OpenUrlInBrowser(url string) {
 		os.Exit(1)
 	}
 
-	err := cmd.Run()
-
-	if err != nil {
-		fmt.Printf("Error opening URL: %s\n", err)
-		os.Exit(1)
-	}
-
+	cmd.Run()
 }
 
 func IsWSL() bool {
