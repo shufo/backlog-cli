@@ -94,6 +94,8 @@ github.com/russross/blackfriday/v2 v2.1.0 h1:JIOH55/0cWyOuilr9/qlrm0BSXldqnqwMsf
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/shufo/find-config v0.1.0 h1:hE9R86TzjBl/uUPHzRU5xuIHMwycou6OxfvEQc37D7s=
 github.com/shufo/find-config v0.1.0/go.mod h1:No38KU7G0pF6fEVxIerElvkgo3q4i+96WYj83OpEXo4=
+github.com/shufo/find-config v0.1.1 h1:cM4rVcY9YTsEJdC/VKbO6KtoaFZoavoh7EpcxBj+sVA=
+github.com/shufo/find-config v0.1.1/go.mod h1:No38KU7G0pF6fEVxIerElvkgo3q4i+96WYj83OpEXo4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
