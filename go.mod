@@ -3,7 +3,7 @@ module github.com/shufo/backlog-cli
 go 1.18
 
 require (
-	github.com/urfave/cli/v3 v3.0.0-alpha2
+	github.com/urfave/cli/v3 v3.0.0-alpha3
 	golang.org/x/crypto v0.1.0
 )
 
