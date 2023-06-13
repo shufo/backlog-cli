@@ -8,7 +8,7 @@ before:
     - go generate ./...
 builds:
   - main: .
-    binary: bk
+    binary: backlog
     ldflags:
       - -s -w
       - -X main.Version={{.Version}}

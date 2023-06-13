@@ -13,7 +13,7 @@ import (
 
 func Execute() {
 	app := &cli.App{
-		Name:  "bk",
+		Name:  "backlog",
 		Usage: "Work seamlessly with Backlog from the command line.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -31,7 +31,7 @@ func Execute() {
 					{
 						Name:      "view",
 						Usage:     "view issue",
-						UsageText: "bk issue view <issue_id>",
+						UsageText: "backlog issue view <issue_id>",
 						ArgsUsage: "<issue_num>",
 						Action:    func(ctx *cli.Context) error { return issue.View(ctx) },
 						Flags: []cli.Flag{
@@ -50,7 +50,7 @@ func Execute() {
 					{
 						Name:      "list",
 						Usage:     "view issues",
-						UsageText: "bk issue list [options]",
+						UsageText: "backlog issue list [options]",
 						Action:    func(ctx *cli.Context) error { return issue.List(ctx) },
 						Flags: []cli.Flag{
 							&cli.StringFlag{
@@ -94,25 +94,25 @@ func Execute() {
 					{
 						Name:      "status",
 						Usage:     "Show status of relevant issues",
-						UsageText: "bk issue status [options]",
+						UsageText: "backlog issue status [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Status(ctx) },
 					},
 					{
 						Name:      "create",
 						Usage:     "Create an issue on Backlog.",
-						UsageText: "bk issue create [options]",
+						UsageText: "backlog issue create [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Create(ctx) },
 					},
 					{
 						Name:      "edit",
 						Usage:     "Edit an issue on Backlog.",
-						UsageText: "bk issue edit <issue_id> [options]",
+						UsageText: "backlog issue edit <issue_id> [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Edit(ctx) },
 					},
 					{
 						Name:      "comment",
 						Usage:     "Add new comment on issue",
-						UsageText: "bk issue comment <issue_id> [options]",
+						UsageText: "backlog issue comment <issue_id> [options]",
 						Action:    func(ctx *cli.Context) error { return issue.Comment(ctx) },
 					},
 				},
@@ -124,7 +124,7 @@ func Execute() {
 					{
 						Name:      "login",
 						Usage:     "Login to backlog organization.\nYou can find organization name at your backlog url https://<organization>.backlog.com/",
-						UsageText: "bk auth login <organization>",
+						UsageText: "backlog auth login <organization>",
 						ArgsUsage: "<organization>",
 						Action: func(ctx *cli.Context) error {
 							auth.Login(ctx)
@@ -141,7 +141,7 @@ func Execute() {
 					{
 						Name:      "set",
 						Usage:     "Create a shortcut for a ba command",
-						UsageText: "bk alias set <alias> <expansion>\ne.g.\n  bk alias set iv 'issue view'",
+						UsageText: "backlog alias set <alias> <expansion>\ne.g.\n  backlog alias set iv 'issue view'",
 						Action: func(ctx *cli.Context) error {
 							if ctx.Args().Len() == 0 {
 								cli.ShowSubcommandHelpAndExit(ctx, 1)
@@ -158,7 +158,7 @@ func Execute() {
 					{
 						Name:      "list",
 						Usage:     "List your aliases",
-						UsageText: "bk alias list",
+						UsageText: "backlog alias list",
 						Action: func(ctx *cli.Context) error {
 							alias.List()
 
@@ -168,7 +168,7 @@ func Execute() {
 					{
 						Name:      "delete",
 						Usage:     "Delete an alias",
-						UsageText: "bk alias delete <alias>",
+						UsageText: "backlog alias delete <alias>",
 						Action: func(ctx *cli.Context) error {
 							if ctx.Args().Len() == 0 {
 								cli.ShowSubcommandHelpAndExit(ctx, 1)
@@ -190,7 +190,7 @@ func Execute() {
 			expansion, err := alias.FindAlias(ctx.Args().First())
 
 			if err != nil {
-				fmt.Printf("unknown command \"%s\" for \"bk\"\n\n", ctx.Args().First())
+				fmt.Printf("unknown command \"%s\" for \"backlog\"\n\n", ctx.Args().First())
 				cli.ShowAppHelp(ctx)
 				os.Exit(1)
 			}

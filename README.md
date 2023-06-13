@@ -21,7 +21,7 @@ $ curl -sSfL https://raw.githubusercontent.com/shufo/backlog-cli/main/install.sh
 You must first authenticate with the following command (Required to login to your organization)
 
 ```bash
-$ bk auth login
+$ backlog auth login
 ```
 
 ![2023-03-19-14-46-29-resize](https://user-images.githubusercontent.com/1641039/226156355-46404529-a869-45b6-9d90-fef45c8ab699.gif)
@@ -39,19 +39,19 @@ If you had an error like below. Please logout then login to your organization.
 - List Issues
 
 ```bash
-$ bk issue list
+$ backlog issue list
 # filter isseu assigned to me
-$ bk issue list --me
+$ backlog issue list --me
 # view issue list on web
-$ bk issue list --web
+$ backlog issue list --web
 ```
 
 - View Issue
 
 ```bash
-$ bk issue view 123
+$ backlog issue view 123
 # view issut on web
-$ bk issue view 123 -w
+$ backlog issue view 123 -w
 ```
 
 ![2023-03-19-15-19-01-resize](https://user-images.githubusercontent.com/1641039/226157765-ffdb7490-7674-4031-a92b-5376236d3e4f.gif)
@@ -59,7 +59,7 @@ $ bk issue view 123 -w
 - Create a new Issue
 
 ```bash
-$ bk issue create
+$ backlog issue create
 ```
 
 ![2023-03-19-14-56-35-resize](https://user-images.githubusercontent.com/1641039/226156978-4658223d-d172-4522-a7b4-9ea04adf8f05.gif)
@@ -67,7 +67,7 @@ $ bk issue create
 - Edit Issue
 
 ```bash
-$ bk issue edit 123
+$ backlog issue edit 123
 ```
 
 ![2023-03-19-15-50-06-resize](https://user-images.githubusercontent.com/1641039/226159273-810e430a-2d0a-40ce-b578-57bb5dc34a8f.gif)
@@ -75,33 +75,33 @@ $ bk issue edit 123
 - View Relevant issues
 
 ```bash
-$ bk issue status
+$ backlog issue status
 ```
 
 - Comment to issue
 
 ```bash
-$ bk issue comment 32
+$ backlog issue comment 32
 ```
 
 ### Alias
 
-- Create a shortcut for a `bk` command
+- Create a shortcut for a `backlog` command
 
 ```bash
-$ bk alias set iv 'issue view'
+$ backlog alias set iv 'issue view'
 ```
 
 - List aliases
 
 ```bash
-$ bk alias list
+$ backlog alias list
 ```
 
 - Delete an alias
 
 ```bash
-$ bk alias delete iv
+$ backlog alias delete iv
 ```
 
 ![2023-03-19-16-03-07-resize](https://user-images.githubusercontent.com/1641039/226159757-6441d5b8-b70f-4371-9ae8-2eabe8db0993.gif)

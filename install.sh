@@ -66,40 +66,40 @@ execute() {
 }
 get_binaries() {
   case "$PLATFORM" in
-    darwin/amd64) BINARIES="bk" ;;
-    darwin/arm64) BINARIES="bk" ;;
-    darwin/armv6) BINARIES="bk" ;;
-    darwin/armv7) BINARIES="bk" ;;
-    darwin/mips64) BINARIES="bk" ;;
-    darwin/mips64le) BINARIES="bk" ;;
-    darwin/ppc64le) BINARIES="bk" ;;
-    darwin/s390x) BINARIES="bk" ;;
-    freebsd/386) BINARIES="bk" ;;
-    freebsd/amd64) BINARIES="bk" ;;
-    freebsd/armv6) BINARIES="bk" ;;
-    freebsd/armv7) BINARIES="bk" ;;
-    freebsd/mips64) BINARIES="bk" ;;
-    freebsd/mips64le) BINARIES="bk" ;;
-    freebsd/ppc64le) BINARIES="bk" ;;
-    freebsd/s390x) BINARIES="bk" ;;
-    linux/386) BINARIES="bk" ;;
-    linux/amd64) BINARIES="bk" ;;
-    linux/arm64) BINARIES="bk" ;;
-    linux/armv6) BINARIES="bk" ;;
-    linux/armv7) BINARIES="bk" ;;
-    linux/mips64) BINARIES="bk" ;;
-    linux/mips64le) BINARIES="bk" ;;
-    linux/ppc64le) BINARIES="bk" ;;
-    linux/s390x) BINARIES="bk" ;;
-    windows/386) BINARIES="bk" ;;
-    windows/amd64) BINARIES="bk" ;;
-    windows/arm64) BINARIES="bk" ;;
-    windows/armv6) BINARIES="bk" ;;
-    windows/armv7) BINARIES="bk" ;;
-    windows/mips64) BINARIES="bk" ;;
-    windows/mips64le) BINARIES="bk" ;;
-    windows/ppc64le) BINARIES="bk" ;;
-    windows/s390x) BINARIES="bk" ;;
+    darwin/amd64) BINARIES="backlog" ;;
+    darwin/arm64) BINARIES="backlog" ;;
+    darwin/armv6) BINARIES="backlog" ;;
+    darwin/armv7) BINARIES="backlog" ;;
+    darwin/mips64) BINARIES="backlog" ;;
+    darwin/mips64le) BINARIES="backlog" ;;
+    darwin/ppc64le) BINARIES="backlog" ;;
+    darwin/s390x) BINARIES="backlog" ;;
+    freebsd/386) BINARIES="backlog" ;;
+    freebsd/amd64) BINARIES="backlog" ;;
+    freebsd/armv6) BINARIES="backlog" ;;
+    freebsd/armv7) BINARIES="backlog" ;;
+    freebsd/mips64) BINARIES="backlog" ;;
+    freebsd/mips64le) BINARIES="backlog" ;;
+    freebsd/ppc64le) BINARIES="backlog" ;;
+    freebsd/s390x) BINARIES="backlog" ;;
+    linux/386) BINARIES="backlog" ;;
+    linux/amd64) BINARIES="backlog" ;;
+    linux/arm64) BINARIES="backlog" ;;
+    linux/armv6) BINARIES="backlog" ;;
+    linux/armv7) BINARIES="backlog" ;;
+    linux/mips64) BINARIES="backlog" ;;
+    linux/mips64le) BINARIES="backlog" ;;
+    linux/ppc64le) BINARIES="backlog" ;;
+    linux/s390x) BINARIES="backlog" ;;
+    windows/386) BINARIES="backlog" ;;
+    windows/amd64) BINARIES="backlog" ;;
+    windows/arm64) BINARIES="backlog" ;;
+    windows/armv6) BINARIES="backlog" ;;
+    windows/armv7) BINARIES="backlog" ;;
+    windows/mips64) BINARIES="backlog" ;;
+    windows/mips64le) BINARIES="backlog" ;;
+    windows/ppc64le) BINARIES="backlog" ;;
+    windows/s390x) BINARIES="backlog" ;;
     *)
       log_crit "platform $PLATFORM is not supported.  Make sure this script is up-to-date and file request at https://github.com/${PREFIX}/issues/new"
       exit 1
