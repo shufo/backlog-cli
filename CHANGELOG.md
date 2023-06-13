@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.8](https://github.com/shufo/backlog-cli/compare/v0.3.7...v0.3.8) (2023-06-13)
+
+
+### Bug Fixes
+
+* **deps:** update github.com/kenzo0107/backlog digest to 44e2d1d ([9ff0a20](https://github.com/shufo/backlog-cli/commit/9ff0a20616b6b555a0fb6728e2c314a23fac9359))
+* **deps:** update module github.com/charmbracelet/bubbletea to v0.24.2 ([8efc39b](https://github.com/shufo/backlog-cli/commit/8efc39b3b2fc2c79584cbe8ea2445398d4ca656e))
+* **deps:** update module github.com/urfave/cli/v3 to v3.0.0-alpha3 ([35123bc](https://github.com/shufo/backlog-cli/commit/35123bc0ae12e6897decfcb21632008122235dfc))
+
+
+### Miscellaneous
+
+* 🤖 change binary name from `bk` to `backlog` ([7d19e31](https://github.com/shufo/backlog-cli/commit/7d19e31305ec7b4c41081fa3359abae1d3fff989))
+
 ## [0.3.7](https://github.com/shufo/backlog-cli/compare/v0.3.6...v0.3.7) (2023-03-21)
 
 
