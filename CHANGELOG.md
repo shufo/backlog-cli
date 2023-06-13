@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/shufo/backlog-cli/compare/v0.3.6...v0.3.7) (2023-03-21)
+
+
+### Bug Fixes
+
+* 🐛 order issue comments to asc ([f1f0bff](https://github.com/shufo/backlog-cli/commit/f1f0bffae2cb454b705c3e8009fcea562a0d5d92))
+
 ## [0.3.6](https://github.com/shufo/backlog-cli/compare/v0.3.5...v0.3.6) (2023-03-21)
 
 
