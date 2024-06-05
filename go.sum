@@ -52,6 +52,8 @@ github.com/kenzo0107/backlog v0.0.0-20230114153534-ecefe0f30c3c h1:GGSApX22PVAqD
 github.com/kenzo0107/backlog v0.0.0-20230114153534-ecefe0f30c3c/go.mod h1:hqoY2iYBM5VEwI7UAONQAL6UEOxVNamKZi7Myuqr7bU=
 github.com/kenzo0107/backlog v0.0.0-20230515082938-44e2d1d88f42 h1:wuLUuSzfuHShaD9ZIn/t9XP0nlf6D9CaMjGUmQY+YWk=
 github.com/kenzo0107/backlog v0.0.0-20230515082938-44e2d1d88f42/go.mod h1:hqoY2iYBM5VEwI7UAONQAL6UEOxVNamKZi7Myuqr7bU=
+github.com/kenzo0107/backlog v0.0.0-20240426001839-61eb940b16cb h1:1EWT/eUoq9C/pUV9UHe7nlftAyZSYaw/Q0eUXAQXx7s=
+github.com/kenzo0107/backlog v0.0.0-20240426001839-61eb940b16cb/go.mod h1:hqoY2iYBM5VEwI7UAONQAL6UEOxVNamKZi7Myuqr7bU=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
 github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
 github.com/lucasb-eyer/go-colorful v1.2.0/go.mod h1:R4dSotOR9KMtayYi1e77YzuveK+i7ruzyGqttikkLy0=
