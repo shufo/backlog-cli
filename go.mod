@@ -1,6 +1,8 @@
 module github.com/shufo/backlog-cli
 
-go 1.18
+go 1.24.2
+
+toolchain go1.24.3
 
 require (
 	github.com/urfave/cli/v3 v3.0.0-alpha3
@@ -34,7 +36,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/jedib0t/go-pretty/v6 v6.4.4
-	github.com/kenzo0107/backlog v0.0.0-20230515082938-44e2d1d88f42
+	github.com/kenzo0107/backlog v0.0.0-20250507014720-dffbea99fcce
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
